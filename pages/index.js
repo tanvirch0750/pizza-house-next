@@ -1,8 +1,9 @@
 import Head from 'next/head';
+import HomeSlider from '../components/HomeSlider';
 
 export default function Home() {
   return (
-    <div>
+    <>
       <Head>
         <title>Pizza House</title>
         <meta
@@ -11,8 +12,7 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <h1>HomePage</h1>
-    </div>
+      <HomeSlider />
+    </>
   );
 }

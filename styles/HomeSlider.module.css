@@ -1,0 +1,33 @@
+.container {
+  height: calc(100vh - 12rem);
+  overflow: hidden;
+}
+
+.arrContainer {
+  position: absolute;
+  width: 5%;
+  height: 10%;
+  top: 10%;
+  bottom: 0;
+  margin: auto;
+  z-index: 1111;
+  cursor: pointer;
+}
+
+.wrapper {
+  width: 300vw;
+  height: 100%;
+  display: flex;
+  transition: all 500ms ease-in-out;
+}
+
+.imgContainer {
+  width: 100vw;
+  height: 100%;
+  position: relative;
+}
+
+.imgContainer img {
+  /* width: 100% !important;
+  height: calc(100vh - 100px) !important; */
+}
