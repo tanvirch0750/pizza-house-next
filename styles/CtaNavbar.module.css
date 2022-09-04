@@ -1,0 +1,40 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4rem;
+  padding: 0 5rem;
+  background-color: var(--color-primary);
+}
+
+.address {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.item svg {
+  width: 2rem;
+  height: 2rem;
+  stroke: var(--color-secondary);
+}
+
+.ctaBtn {
+  background-color: var(--color-secondary);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 3rem;
+  cursor: pointer;
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: var(--color-black);
+}
