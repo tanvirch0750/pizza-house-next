@@ -1,0 +1,12 @@
+.container {
+  max-width: 120rem;
+  margin: 0 auto;
+  padding: 7.4rem 3.2rem;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+  grid-gap: 3.2rem;
+  align-items: center;
+}

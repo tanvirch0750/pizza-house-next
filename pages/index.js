@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import HomeSlider from '../components/HomeSlider';
+import PizzaList from '../components/PizzaList';
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <HomeSlider />
+      <PizzaList />
     </>
   );
 }
