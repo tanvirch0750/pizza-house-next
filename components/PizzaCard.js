@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from '../styles/PizzaCard.module.css';
 
 const PizzaCard = () => {
@@ -14,7 +15,9 @@ const PizzaCard = () => {
       </p>
       <div className={styles.pricebox}>
         <span>$25.00</span>
-        <button>Order Now</button>
+        <Link href="/product/ffdd">
+          <button>Order Now</button>
+        </Link>
       </div>
     </div>
   );

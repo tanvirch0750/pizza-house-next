@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from '../styles/Navbar.module.css';
 
 const Navbar = () => {
@@ -9,7 +10,9 @@ const Navbar = () => {
       </div>
       <nav className={styles.item}>
         <ul className={styles.list}>
-          <li className={styles.listItem}>Home</li>
+          <Link href="/" className={styles.listItem}>
+            Home
+          </Link>
           <li className={styles.listItem}>About</li>
           <li className={styles.listItem}>Menus</li>
           <li className={styles.listItem}>Blog</li>
@@ -18,12 +21,14 @@ const Navbar = () => {
         </ul>
       </nav>
       <div className={styles.item}>
-        <div className={styles.cart}>
-          <div className={styles.imgContainer}>
-            <Image src="/images/cart.png" alt="cart" width={20} height={20} />
+        <Link href="/cart">
+          <div className={styles.cart}>
+            <div className={styles.imgContainer}>
+              <Image src="/images/cart.png" alt="cart" width={20} height={20} />
+            </div>
+            <div className={styles.counter}>2</div>
           </div>
-          <div className={styles.counter}>2</div>
-        </div>
+        </Link>
       </div>
     </div>
   );
