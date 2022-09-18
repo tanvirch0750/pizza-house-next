@@ -2,7 +2,7 @@ import styles from '../styles/PizzaList.module.css';
 import Heading from './Heading';
 import PizzaCard from './PizzaCard';
 
-const PizzaList = () => {
+const PizzaList = ({ pizzas }) => {
   return (
     <section className={styles.container}>
       <Heading
@@ -12,12 +12,9 @@ const PizzaList = () => {
           thin, in the crust we trust"
       />
       <div className={styles.wrapper}>
-        <PizzaCard />
-        <PizzaCard />
-        <PizzaCard />
-        <PizzaCard />
-        <PizzaCard />
-        <PizzaCard />
+        {pizzas.map((pizza) => (
+          <PizzaCard key={pizza.id} pizza={pizza} />
+        ))}
       </div>
     </section>
   );
