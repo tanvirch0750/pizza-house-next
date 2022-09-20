@@ -2,8 +2,9 @@ import axios from 'axios';
 import Image from 'next/image';
 import styles from '../../styles/Order.module.css';
 
-const Order = () => {
-  const status = 0;
+const Order = ({ order }) => {
+  console.log(order);
+  const status = order.status;
 
   const statusClass = (index) => {
     if (index - status < 1) return styles.done;
@@ -27,16 +28,16 @@ const Order = () => {
             <tbody>
               <tr className={styles.tr}>
                 <td>
-                  <span className={styles.id}>5478895466</span>
+                  <span className={styles.id}>{order._id}</span>
                 </td>
                 <td>
-                  <span className={styles.customer}>Tanvir Chowdhury</span>
+                  <span className={styles.customer}>{order.customer}</span>
                 </td>
                 <td>
-                  <span className={styles.address}>Chandpur, Bangladesh</span>
+                  <span className={styles.address}>{order.address}</span>
                 </td>
                 <td>
-                  <span className={styles.total}>$50.00</span>
+                  <span className={styles.total}>${order.total}</span>
                 </td>
               </tr>
             </tbody>
@@ -119,15 +120,15 @@ const Order = () => {
           <h2 className={styles.checkoutTitle}>CART TOTAL</h2>
           <p className={styles.totalText}>
             <span className={styles.textTitle}>Subtotal:</span>
-            <span className={styles.textPrice}>$50.00</span>
+            <span className={styles.textPrice}>${order.total}</span>
           </p>
           <p className={styles.totalText}>
             <span className={styles.textTitle}>Discount:</span>
-            <span className={styles.textPrice}>$5.00</span>
+            <span className={styles.textPrice}>$0.00</span>
           </p>
           <p className={styles.totalText}>
             <span className={styles.textTitle}>Total:</span>
-            <span className={styles.textPrice}>$45.00</span>
+            <span className={styles.textPrice}>${order.total}</span>
           </p>
           <button disabled className={styles.btn}>
             PAID
@@ -144,7 +145,7 @@ export const getServerSideProps = async ({ params }) => {
   );
   return {
     props: {
-      orders: response.data,
+      order: response.data,
     },
   };
 };

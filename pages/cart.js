@@ -8,11 +8,13 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import CashOnDeliveryModal from '../components/CashOnDeliveryModal';
 import { reset } from '../redux/features/cart/cartSlice';
 import styles from '../styles/Cart.module.css';
 
 const Cart = () => {
   const [open, setOpen] = useState(false);
+  const [cashOnDelivery, setCashOnDelivery] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
   const { products, total, quantity } = useSelector((state) => state.cart);
@@ -26,6 +28,10 @@ const Cart = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const cancelCODorder = () => {
+    setCashOnDelivery(false);
   };
 
   // This values are the props in the UI
@@ -162,7 +168,12 @@ const Cart = () => {
 
           {open ? (
             <div className={style.paymentMethods}>
-              <button className={styles.btnPayment}>Cash On Delivery</button>
+              <button
+                className={styles.btnPayment}
+                onClick={() => setCashOnDelivery(true)}
+              >
+                Cash On Delivery
+              </button>
               <PayPalScriptProvider
                 options={{
                   'client-id':
@@ -182,6 +193,13 @@ const Cart = () => {
           )}
         </div>
       </div>
+      {cashOnDelivery && (
+        <CashOnDeliveryModal
+          total={total}
+          createOrder={createOrder}
+          cancelCODorder={cancelCODorder}
+        />
+      )}
     </div>
   );
 };
