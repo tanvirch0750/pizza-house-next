@@ -3,20 +3,33 @@ import {
   PayPalScriptProvider,
   usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
+import axios from 'axios';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { reset } from '../redux/features/cart/cartSlice';
 import styles from '../styles/Cart.module.css';
 
 const Cart = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
+  const router = useRouter();
   const { products, total, quantity } = useSelector((state) => state.cart);
 
-  console.log(open);
+  const createOrder = async (data) => {
+    try {
+      const res = await axios.post('http://localhost:3000/api/orders', data);
+      console.log(res);
+      res.status === 201 && router.push(`/orders/${res.data._id}`);
+      dispatch(reset());
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // This values are the props in the UI
-  const amount = '2';
+  const amount = total;
   const currency = 'USD';
   const style = { layout: 'vertical' };
 
@@ -64,7 +77,13 @@ const Cart = () => {
           onApprove={function (data, actions) {
             return actions.order.capture().then(function (details) {
               // Your code here after capture the order
-              console.log(details);
+              const shipping = details.purchase_units[0].shipping;
+              createOrder({
+                customer: shipping.name.full_name,
+                address: shipping.address.address_line_1,
+                total: total,
+                method: 1,
+              });
             });
           }}
         />
@@ -88,7 +107,7 @@ const Cart = () => {
           </thead>
           <tbody>
             {products.map((product) => (
-              <tr key={product.id} className={styles.tr}>
+              <tr key={product._id} className={styles.tr}>
                 <td>
                   <div className={styles.imgContainer}>
                     <Image
