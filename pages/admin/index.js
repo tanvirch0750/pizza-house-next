@@ -122,7 +122,18 @@ const Admin = ({ pizzas, orders }) => {
   );
 };
 
-export const getServerSideProps = async (req, res) => {
+export const getServerSideProps = async (context) => {
+  const myCookie = context.req?.cookies || '';
+
+  if (myCookie.token !== process.env.TOKEN) {
+    return {
+      redirect: {
+        destination: '/auth/login',
+        permanent: false,
+      },
+    };
+  }
+
   const productResponse = await axios.get('http://localhost:3000/api/products');
   const orderResponse = await axios.get('http://localhost:3000/api/orders');
 
