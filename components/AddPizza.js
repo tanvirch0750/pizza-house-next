@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState } from 'react';
 import styles from '../styles/AddPizza.module.css';
 
@@ -22,7 +23,35 @@ const AddPizza = ({ setClose }) => {
     setExtraIng((prev) => [...prev, extra]);
   };
 
-  const handleAddPizza = async () => {};
+  const handleAddPizza = async () => {
+    const data = new FormData();
+    data.append('file', file);
+    data.append('upload_preset', 'uploads');
+
+    try {
+      const uploadRes = await axios.post(
+        'https://api.cloudinary.com/v1_1/tanvir-dev/image/upload',
+        data
+      );
+      const { url } = uploadRes.data;
+      const newProduct = {
+        title,
+        desc,
+        img: url,
+        prices,
+        extraIng,
+      };
+
+      if (title && desc && url && prices && extraIng) {
+        await axios.post('http://localhost:3000/api/products', newProduct);
+        setClose(false);
+      } else {
+        alert('Please provide all the data');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className={styles.container}>

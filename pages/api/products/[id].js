@@ -7,7 +7,10 @@ export default async function handler(req, res) {
   const {
     method,
     query: { id },
+    cookies,
   } = req;
+
+  const token = cookies.token;
 
   if (method === 'GET') {
     try {
@@ -19,6 +22,9 @@ export default async function handler(req, res) {
   }
 
   if (method === 'PATCH') {
+    if (!token && token !== process.env.TOKEN) {
+      res.status(401).json('You are not authenticate');
+    }
     try {
       const product = await Product.findByIdAndUpdate(id, req.body, {
         new: true,
@@ -31,6 +37,9 @@ export default async function handler(req, res) {
   }
 
   if (method === 'DELETE') {
+    if (!token && token !== process.env.TOKEN) {
+      res.status(401).json('You are not authenticate');
+    }
     try {
       await Product.findByIdAndDelete(id);
 
