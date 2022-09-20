@@ -1,12 +1,14 @@
 import axios from 'axios';
 import Image from 'next/image';
 import { useState } from 'react';
+import AddPizza from '../../components/AddPizza';
 import styles from '../../styles/Admin.module.css';
 
-const Admin = ({ pizzas, orders }) => {
+const Admin = ({ pizzas, orders, admin }) => {
   const [pizzaList, setPizzaList] = useState(pizzas);
   const [orderList, setOrderList] = useState(orders);
   const status = ['preparing', 'on the way', 'delivered'];
+  const [close, setClose] = useState(false);
 
   const handleProductDelete = async (id) => {
     try {
@@ -37,93 +39,102 @@ const Admin = ({ pizzas, orders }) => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.item}>
-        <h2 className={styles.title}>Products</h2>
-        <table className={styles.table}>
-          <thead>
-            <tr className={styles.trTitle}>
-              <th>Image</th>
-              <th>Id</th>
-              <th>Title</th>
-              <th>Price</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pizzaList?.map((pizza) => (
-              <tr key={pizza._id} className={styles.trTitle}>
-                <td>
-                  <Image
-                    src={pizza.img}
-                    alt="pizza"
-                    width={50}
-                    height={50}
-                    objectFit="cover"
-                  />
-                </td>
-                <td>{pizza._id.slice(0, 5)}...</td>
-                <td>{pizza.title}</td>
-                <td>
-                  {pizza.prices.map((price, idx) => (
-                    <span key={idx}>{price}, </span>
-                  ))}{' '}
-                </td>
-                <td>
-                  <button className={styles.btn}>Edit</button>
-                  <button
-                    className={styles.btn}
-                    onClick={() => handleProductDelete(pizza._id)}
-                  >
-                    Delete
-                  </button>
-                </td>
+      {admin && (
+        <button className={styles.addBtn} onClick={() => setClose(true)}>
+          Add Pizza
+        </button>
+      )}
+      <div className={styles.wrapper}>
+        <div className={styles.item}>
+          <h2 className={styles.title}>Products</h2>
+          <table className={styles.table}>
+            <thead>
+              <tr className={styles.trTitle}>
+                <th>Image</th>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className={styles.item}>
-        <h2 className={styles.title}>Orders</h2>
-        <table className={styles.table}>
-          <thead>
-            <tr className={styles.trTitle}>
-              <th>Id</th>
-              <th>Customer</th>
-              <th>Total</th>
-              <th>Payment</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orderList?.map((order) => (
-              <tr key={order._id} className={styles.trTitle}>
-                <td>{order._id.slice(0, 5)}...</td>
-                <td>{order.customer}</td>
-                <td>${order.total}</td>
-                <td>
-                  {order.method === 0 ? <span>Cash</span> : <span>Paid</span>}
-                </td>
-                <td>{status[order.status]}</td>
-                <td>
-                  <button
-                    onClick={() => handleStatus(order._id)}
-                    className={styles.btn}
-                  >
-                    Next Stage
-                  </button>
-                </td>
+            </thead>
+            <tbody>
+              {pizzaList?.map((pizza) => (
+                <tr key={pizza._id} className={styles.trTitle}>
+                  <td>
+                    <Image
+                      src={pizza.img}
+                      alt="pizza"
+                      width={50}
+                      height={50}
+                      objectFit="cover"
+                    />
+                  </td>
+                  <td>{pizza._id.slice(0, 5)}...</td>
+                  <td>{pizza.title}</td>
+                  <td>
+                    {pizza.prices.map((price, idx) => (
+                      <span key={idx}>{price}, </span>
+                    ))}{' '}
+                  </td>
+                  <td>
+                    <button className={styles.btn}>Edit</button>
+                    <button
+                      className={styles.btn}
+                      onClick={() => handleProductDelete(pizza._id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className={styles.item}>
+          <h2 className={styles.title}>Orders</h2>
+          <table className={styles.table}>
+            <thead>
+              <tr className={styles.trTitle}>
+                <th>Id</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Payment</th>
+                <th>Status</th>
+                <th>Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {orderList?.map((order) => (
+                <tr key={order._id} className={styles.trTitle}>
+                  <td>{order._id.slice(0, 5)}...</td>
+                  <td>{order.customer}</td>
+                  <td>${order.total}</td>
+                  <td>
+                    {order.method === 0 ? <span>Cash</span> : <span>Paid</span>}
+                  </td>
+                  <td>{status[order.status]}</td>
+                  <td>
+                    <button
+                      onClick={() => handleStatus(order._id)}
+                      className={styles.btn}
+                    >
+                      Next Stage
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
+      {close && <AddPizza setClose={setClose} />}
     </div>
   );
 };
 
 export const getServerSideProps = async (context) => {
   const myCookie = context.req?.cookies || '';
+  let admin = false;
 
   if (myCookie.token !== process.env.TOKEN) {
     return {
@@ -132,6 +143,8 @@ export const getServerSideProps = async (context) => {
         permanent: false,
       },
     };
+  } else {
+    admin = true;
   }
 
   const productResponse = await axios.get('http://localhost:3000/api/products');
@@ -141,6 +154,7 @@ export const getServerSideProps = async (context) => {
     props: {
       pizzas: productResponse.data,
       orders: orderResponse.data,
+      admin,
     },
   };
 };
